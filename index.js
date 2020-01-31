@@ -1,5 +1,7 @@
 var app = require('express')();
 var request = require('request');
+const dialogflow = require('dialogflow');
+const uuid = require('uuid');
 
 var sqlite3 =  require('sqlite3');
 
@@ -15,6 +17,48 @@ function initializeDb() {
     db.run('CREATE TABLE IF NOT EXISTS user (id int,Name TEXT,Age int,Address TEXT)');
 
 }
+
+
+/**
+ * Send a query to the dialogflow agent, and return the query result.
+ * @param {string} projectId The project to be used
+ */
+async function runSample(projectId = 'texecom-dxllts') {
+    // A unique identifier for the given session
+    const sessionId = uuid.v4();
+   
+    // Create a new session
+    const sessionClient = new dialogflow.SessionsClient();
+    const sessionPath = sessionClient.sessionPath(projectId, sessionId);
+ 
+  // The text query request.
+  const request = {
+    session: sessionPath,
+    queryInput: {
+      text: {
+           // The query to send to the dialogflow agent
+        text: 'hello',
+        // The language used by the client (en-US)
+        languageCode: 'en-US',
+      },
+    },
+  };
+ 
+  // Send request and log result
+  const responses = await sessionClient.detectIntent(request);
+  console.log('Detected intent');
+  const result = responses[0].queryResult;
+  console.log(`  Query: ${result.queryText}`);
+  console.log(`  Response: ${result.fulfillmentText}`);
+  if (result.intent) {
+    console.log(`  Intent: ${result.intent.displayName}`);
+  } else {
+    console.log(`  No intent matched.`);
+}
+}
+
+
+
 var port = process.env.PORT || 8080;
 app.listen(port,function (err) {
      initializeDb();
@@ -32,7 +76,7 @@ app.get('/',function (req,res) {
 app.post('/',function (req,res) {
 
     console.log("post request ");
-    res.send('hello');
+    runSample();
 
 });
 
