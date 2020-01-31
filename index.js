@@ -67,15 +67,12 @@ app.listen(port,function (err) {
 
 });
 
-app.get('/',function (req,res) {
-
-    console.log("Get request ");
-    res.send('hello');
-
-});
+app.get('/',function(req,res){
+    res.send('We are happy to see you using Chat Bot Webhook');
+  });
 app.post('/',function (req,res) {
 
-    console.log("post request "+JSON.stringify(req.body));
+    console.log("post request "+JSON.stringify(req));
     runSample();
 
 });
