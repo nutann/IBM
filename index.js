@@ -15,17 +15,23 @@ function initializeDb() {
     db.run('CREATE TABLE IF NOT EXISTS user (id int,Name TEXT,Age int,Address TEXT)');
 
 }
-
-app.listen(3000,function (err) {
+var port = process.env.PORT || 8080;
+app.listen(port,function (err) {
      initializeDb();
 
-    console.log("Listening to port 3000");
+    console.log("Listening to port "+port);
 
 });
 
 app.get('/',function (req,res) {
 
+    console.log("Get request ");
+    res.send('hello');
 
+});
+app.post('/',function (req,res) {
+
+    console.log("post request ");
     res.send('hello');
 
 });
