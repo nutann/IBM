@@ -73,13 +73,13 @@ app.get('/',function(req,res){
 app.post('/',function (req,res) {
 
     console.log("******************");
-   // runSample();
+    runSample();
 
 });
 app.post('/webhook',function (req,res) {
 
     console.log("post request webhook"+JSON.stringify(req.body.result));
-    //runSample();
+    runSample();
 
 });
 
