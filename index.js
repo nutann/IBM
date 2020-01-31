@@ -72,7 +72,7 @@ app.get('/',function(req,res){
   });
 app.post('/',function (req,res) {
 
-    console.log("post request "+JSON.stringify(req));
+    console.log("post request "+req);
     runSample();
 
 });
