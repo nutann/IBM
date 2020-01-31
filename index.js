@@ -78,7 +78,7 @@ app.post('/',function (req,res) {
 });
 app.post('/webhook',function (req,res) {
 
-    console.log("post request webhook"+JSON.stringify(request.body.result));
+    console.log("post request webhook"+JSON.stringify(req.body.result));
     //runSample();
 
 });
