@@ -28,7 +28,7 @@ async function runSample(projectId = 'texecom-dxllts') {
     const sessionId = uuid.v4();
    
     // Create a new session
-    const sessionClient = new dialogflow.SessionsClient();
+    const sessionClient = new dialogflow.SessionsClient( {keyFilename: "./googlekey.json"});
     const sessionPath = sessionClient.sessionPath(projectId, sessionId);
  
   // The text query request.
