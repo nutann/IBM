@@ -72,10 +72,17 @@ app.get('/',function(req,res){
   });
 app.post('/',function (req,res) {
 
-    console.log("post request "+req);
-    runSample();
+    console.log("******************");
+   // runSample();
 
 });
+app.post('/webhook',function (req,res) {
+
+    console.log("post request webhook"+JSON.stringify(request.body.result));
+    //runSample();
+
+});
+
 
 app.post('/update',function (req,res) {
 
