@@ -45,7 +45,7 @@ async function runSample(projectId = 'texecom-dxllts') {
   };
  
   // Send request and log result
-  const responses = await sessionClient.detectIntent(request);
+  const responses = await sessionClient.detectIntent(request).catch((err) => console.log(err));
   console.log('Detected intent');
   const result = responses[0].queryResult;
   console.log(`  Query: ${result.queryText}`);
