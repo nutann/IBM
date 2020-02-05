@@ -1,24 +1,19 @@
-var app = require('express')();
+var express = require('express');
 var request = require('request');
 const dialogflow = require('dialogflow');
 const uuid = require('uuid');
 
-var sqlite3 =  require('sqlite3');
 
-var bodyparser = require('body-parser');
+var app = express();
+//var bodyparser = require('body-parser');
 
-var db = new sqlite3.Database('./user1.db')
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
-app.use(bodyParser.json());
+//app.use(bodyparser.urlencoded({ extended: false }));
 
 
 
-function initializeDb() {
-    console.log("Initialize table");
-
-    db.run('CREATE TABLE IF NOT EXISTS user (id int,Name TEXT,Age int,Address TEXT)');
-
-}
 
 
 /**
@@ -63,59 +58,26 @@ async function runSample(projectId = 'texecom-dxllts') {
 
 var port = process.env.PORT || 8080;
 app.listen(port,function (err) {
-    // initializeDb();
-
     console.log("Listening to port "+port);
-
 });
 
 app.get('/',function(req,res){
+    console.log("******************");
     res.send('We are happy to see you using Chat Bot Webhook');
   });
 app.post('/',function (req,res) {
 
     console.log("******************");
-    runSample();
+   // runSample();
 
 });
 app.post('/webhook',function (req,res) {
 
-    console.log("post request webhook"+JSON.stringify(req.body));
-    runSample();
+    console.log("post ssrequest webhook"+JSON.stringify(req.body));
+    console.log("post request webhook"+req.body.result);
+    res.send("hello");
+  //  runSample();
 
 });
 
-
-app.post('/update',function (req,res) {
-
-    console.log("iCheck "+JSON.stringify(req.body));
-
-    db.run('INSERT INTO user (id,Name,age) VALUES (?,?,?)',req.body.id,req.body.name,req.body.age);
-
-    var options = {
-        url : "http://localhost:3000/updateAddress",
-        form: {
-        id: req.body.id,
-        address: req.body.address
-        }
-    }
-    request.post(options,function (response,body) {
-        console.log("updated");
-    })
-
-
-
-    res.send('updated');
-
-});
-
-app.post('/updateAddress',function (req,res) {
-
-    console.log("iCheck updateAddress"+JSON.stringify(req.body));
-
-    db.run('UPDATE user SET Address=? WHERE id=?',req.body.address,req.body.id);
-
-    res.send('updated');
-
-});
 
