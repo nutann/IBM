@@ -9,7 +9,7 @@ var bodyparser = require('body-parser');
 
 var db = new sqlite3.Database('./user1.db')
 
-app.use(bodyparser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 
 
