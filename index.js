@@ -73,11 +73,25 @@ app.post('/',function (req,res) {
 });
 app.post('/webhook',function (req,res) {
 
-    console.log("post ssrequest webhook"+JSON.stringify(req.body));
-    console.log("post request webhook"+req.body.result);
-    res.send("hello");
+    console.log("post ssrequest webhook"+JSON.stringify(req.body.queryResult.action));
+    
+    let fullFillementText = processAction(req.body.queryResult.action);
+    console.log("post fullFillementText"+JSON.stringify(fullFillementText));
+    res.json((fullFillementText));
   //  runSample();
 
 });
+function processAction(action){
+    console.log("processAction action"+action);
+    switch(action){
+        case "input.welcome" :
+            console.log("processAction welcome action");
+            return {
+				fulfillmentText: 'Could not get results at this time',
+				source: 'getmovie'
+			}
+            break;
+    }
+}
 
 
