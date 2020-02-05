@@ -21,7 +21,8 @@ const {
 // Create an app instance
 const assistant = dialogflow()
 
-assistant.intent('texecomwelcome', conv => {
+assistant.intent('texecomchangeplan', conv => {
+  console.log("****nutan changeplan intent*****");
   conv.ask('Hi, how is it going?')
   conv.ask(`Here's a picture of a cat`)
   conv.ask(new Image({
