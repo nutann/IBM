@@ -9,9 +9,9 @@ var bodyparser = require('body-parser');
 
 var db = new sqlite3.Database('./user1.db')
 
-app.use(bodyparser.urlencoded({}));
-app.use(bodyParser.urlencoded({ extended: true }));
-    
+app.use(bodyparser.urlencoded({ extended: true }));
+
+
 
 function initializeDb() {
     console.log("Initialize table");
@@ -80,7 +80,7 @@ app.post('/',function (req,res) {
 });
 app.post('/webhook',function (req,res) {
 
-    console.log("post request webhook"+JSON.stringify(req.body));
+    console.log("post request webhook"+JSON.stringify(req.body.result));
     runSample();
 
 });
