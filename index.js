@@ -12,7 +12,23 @@ app.use(express.urlencoded({ extended: true }))
 
 //app.use(bodyparser.urlencoded({ extended: false }));
 
+// Import the appropriate service and chosen wrappers
+const {
+  dialogflow,
+  Image,
+} = require('actions-on-google')
 
+// Create an app instance
+const assistant = dialogflow()
+
+assistant.intent('texecomwelcome', conv => {
+  conv.ask('Hi, how is it going?')
+  conv.ask(`Here's a picture of a cat`)
+  conv.ask(new Image({
+    url: 'https://developers.google.com/web/fundamentals/accessibility/semantics-builtin/imgs/160204193356-01-cat-500.jpg',
+    alt: 'A cat',
+  }))
+})
 
 
 
@@ -71,16 +87,17 @@ app.post('/',function (req,res) {
    // runSample();
 
 });
-app.post('/webhook',function (req,res) {
+// app.post('/webhook',function (req,res) {
 
-    console.log("post ssrequest webhook"+JSON.stringify(req.body.queryResult.action));
+//     console.log("post ssrequest webhook"+JSON.stringify(req.body.queryResult.action));
     
-    let fullFillementText = processAction(req.body.queryResult.action);
-    console.log("post fullFillementText"+JSON.stringify(fullFillementText));
-    res.json((fullFillementText));
-  //  runSample();
+//     let fullFillementText = processAction(req.body.queryResult.action);
+//     console.log("post fullFillementText"+JSON.stringify(fullFillementText));
+//     res.json((fullFillementText));
+//   //  runSample();
 
-});
+// });
+app.post('/webhook',assistant);
 function processAction(action){
     console.log("processAction action"+action);
     switch(action){
