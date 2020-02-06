@@ -12,23 +12,23 @@ app.use(express.urlencoded({ extended: true }))
 
 //app.use(bodyparser.urlencoded({ extended: false }));
 
-// Import the appropriate service and chosen wrappers
-const {
-  dialogflow,
-  Image,
-} = require('actions-on-google')
+// // Import the appropriate service and chosen wrappers
+// const {
+//   dialogflow,
+//   Image,
+// } = require('actions-on-google')
 
-// Create an app instance
-const dialogueflow = dialogflow()
+// // Create an app instance
+// const dialogueflow = dialogflow()
 
-dialogueflow.intent('Default Welcome Intent', conv => {
-  conv.ask('Hi, how is it going?')
-  conv.ask(`Here's a picture of a cat`)
-  conv.ask(new Image({
-    url: 'https://developers.google.com/web/fundamentals/accessibility/semantics-builtin/imgs/160204193356-01-cat-500.jpg',
-    alt: 'A cat',
-  }))
-})
+// dialogueflow.intent('Default Welcome Intent', conv => {
+//   conv.ask('Hi, how is it going?')
+//   conv.ask(`Here's a picture of a cat`)
+//   conv.ask(new Image({
+//     url: 'https://developers.google.com/web/fundamentals/accessibility/semantics-builtin/imgs/160204193356-01-cat-500.jpg',
+//     alt: 'A cat',
+//   }))
+// })
 
 
 
