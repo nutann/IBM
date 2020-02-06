@@ -74,7 +74,7 @@ async function runSample(projectId = 'texecom-dxllts') {
 var port = process.env.PORT || 8080;
 app.listen(port,function (err) {
     console.log("Listening to port "+port);
-    runSample();
+    //runSample();
 });
 
 app.get('/',function(req,res){
