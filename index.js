@@ -51,7 +51,7 @@ async function runSample(projectId = 'texecom-dxllts') {
     queryInput: {
       text: {
            // The query to send to the dialogflow agent
-        text: 'Hi this is texecom ***',
+        text: '',
         // The language used by the client (en-US)
         languageCode: 'en-US',
       },
