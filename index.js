@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: true }))
 //   }))
 // })
 
-projects/texecom-dxllts/agent/sessions/556bc5bf-d99d-2823-2448-b47334e3eae7/contexts/awaiting_selection
+
 
 /**
  * Send a query to the dialogflow agent, and return the query result.
