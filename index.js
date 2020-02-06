@@ -1,6 +1,6 @@
 var express = require('express');
 var request = require('request');
-//const dialogflow = require('dialogflow');
+const dialogflow = require('dialogflow');
 const uuid = require('uuid');
 
 
@@ -19,10 +19,9 @@ const {
 } = require('actions-on-google')
 
 // Create an app instance
-const assistant = dialogflow()
+const dialogueflow = dialogflow()
 
-assistant.intent('texecomchangeplan', conv => {
-  console.log("****nutan changeplan intent*****");
+dialogueflow.intent('Default Welcome Intent', conv => {
   conv.ask('Hi, how is it going?')
   conv.ask(`Here's a picture of a cat`)
   conv.ask(new Image({
@@ -73,7 +72,7 @@ async function runSample(projectId = 'texecom-dxllts') {
 
 
 
-var port = process.env.PORT || 8090;
+var port = process.env.PORT || 8080;
 app.listen(port,function (err) {
     console.log("Listening to port "+port);
 });
@@ -84,28 +83,27 @@ app.get('/',function(req,res){
   });
 app.post('/',function (req,res) {
 
-    console.log("******************");
+    console.log("****************** POST request ***********");
    // runSample();
 
 });
-// app.post('/webhook',function (req,res) {
+app.post('/webhook',function (req,res) {
 
-//     console.log("post ssrequest webhook"+JSON.stringify(req.body.queryResult.action));
+    console.log("post ssrequest webhook"+JSON.stringify(req.body.queryResult.action));
     
-//     let fullFillementText = processAction(req.body.queryResult.action);
-//     console.log("post fullFillementText"+JSON.stringify(fullFillementText));
-//     res.json((fullFillementText));
-//   //  runSample();
+    let fullFillementText = processAction(req.body.queryResult.action);
+    console.log("post fullFillementText"+JSON.stringify(fullFillementText));
+    res.json((fullFillementText));
+  //  runSample();
 
-// });
-app.post('/webhook',assistant);
+});
 function processAction(action){
     console.log("processAction action"+action);
     switch(action){
         case "input.welcome" :
             console.log("processAction welcome action");
             return {
-				fulfillmentText: 'Could not get results at this time',
+				fulfillmentText: 'Hi! I am Texecom Assistant ! Currently I have limited functionality . Please select one of the option',
 				source: 'getmovie'
 			}
             break;
