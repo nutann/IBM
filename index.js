@@ -51,7 +51,7 @@ async function runSample(projectId = 'texecom-dxllts') {
     queryInput: {
       text: {
            // The query to send to the dialogflow agent
-        text: '',
+        text: 'Hi',
         // The language used by the client (en-US)
         languageCode: 'en-US',
       },
@@ -70,8 +70,6 @@ async function runSample(projectId = 'texecom-dxllts') {
     console.log(`  No intent matched.`);
 }
 }
-
-
 
 var port = process.env.PORT || 8080;
 app.listen(port,function (err) {
