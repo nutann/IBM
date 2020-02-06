@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: true }))
 //   }))
 // })
 
-
+projects/texecom-dxllts/agent/sessions/556bc5bf-d99d-2823-2448-b47334e3eae7/contexts/awaiting_selection
 
 /**
  * Send a query to the dialogflow agent, and return the query result.
@@ -43,6 +43,7 @@ async function runSample(projectId = 'texecom-dxllts') {
     // Create a new session
     const sessionClient = new dialogflow.SessionsClient( {keyFilename: "./googlekey.json"});
     const sessionPath = sessionClient.sessionPath(projectId, sessionId);
+  
  
   // The text query request.
   const request = {
@@ -50,7 +51,7 @@ async function runSample(projectId = 'texecom-dxllts') {
     queryInput: {
       text: {
            // The query to send to the dialogflow agent
-        text: 'hello',
+        text: 'Hi this is texecom ***',
         // The language used by the client (en-US)
         languageCode: 'en-US',
       },
@@ -75,6 +76,7 @@ async function runSample(projectId = 'texecom-dxllts') {
 var port = process.env.PORT || 8080;
 app.listen(port,function (err) {
     console.log("Listening to port "+port);
+    runSample();
 });
 
 app.get('/',function(req,res){
