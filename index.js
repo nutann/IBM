@@ -65,10 +65,10 @@ server.listen(port,function (err) {
     //runSample();
 });
 
-// app.get('/',function(req,res){
-//     console.log("******************");
-//     res.send('We are happy to see you using Chat Bot Webhook');
-//   });
+app.get('/',function(req,res){
+    console.log("******************");
+    res.send('We are happy to see you using Chat Bot Webhook');
+  });
 app.post('/',function (req,res) {
 
     console.log("****************** POST request ***********");
@@ -114,9 +114,10 @@ wsServer.on('connection', (ws) => {
  * Send a query to the dialogflow agent, and return the query result.
  * @param {string} projectId The project to be used
  */
-async function runSample(projectId = 'texecom-dxllts',message) {
+async function runSample(message) {
   // A unique identifier for the given session
   const sessionId = uuid.v4();
+  var projectId = 'texecom-dxllts'
  
   // Create a new session
   const sessionClient = new dialogflow.SessionsClient( {keyFilename: "./googlekey.json"});
@@ -129,7 +130,7 @@ const request = {
   queryInput: {
     text: {
          // The query to send to the dialogflow agent
-      text: message,
+      text: 'hi',
       // The language used by the client (en-US)
       languageCode: 'en-US',
     },
