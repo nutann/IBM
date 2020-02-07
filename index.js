@@ -3,7 +3,7 @@ var request = require('request');
 const dialogflow = require('dialogflow');
 const uuid = require('uuid');
 // websocket and http servers
-var webSocketServer = require('websocket').server;
+//var webSocketServer = require('websocket').server;
 var http = require('http'); 
 var WebSocket = require('ws');
 
@@ -150,7 +150,7 @@ if (result.intent) {
 }
 }
 
-  clients = webSocketServer.clients
+ // clients = webSocketServer.clients
   var userName = false;
   var userColor = false;
   console.log((new Date()) + ' Connection accepted.');
