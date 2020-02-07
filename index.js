@@ -157,7 +157,7 @@ if (result.intent) {
   console.log((new Date()) + ' Connection accepted.');
   // send back chat history
   if (history.length > 0) {
-    ws.send(JSON.stringify( { type: 'history', data: history} ));
+    ws.send(JSON.stringify( { type: 'history', data: history.reverse()} ));
 }
   function sendMessage(message) {
     var obj = {
