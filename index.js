@@ -163,7 +163,7 @@ if (result.intent) {
     var obj = {
       time: (new Date()).getTime(),
       text: htmlEntities(message),
-      author: userName,
+      author: "Texecom",
       color: userColor
     };
     history.push(obj);
@@ -187,18 +187,18 @@ if (result.intent) {
                             + userName + ': ' + message);
                 
                 // we want to keep history of all sent messages
-              //   var obj = {
-              //       time: (new Date()).getTime(),
-              //       text: htmlEntities(message),
-              //       author: userName,
-              //       color: userColor
-              //   };
-              //   history.push(obj);
-              //   history = history.slice(-100);
+                var obj = {
+                    time: (new Date()).getTime(),
+                    text: htmlEntities(message),
+                    author: userName,
+                    color: userColor
+                };
+                history.push(obj);
+                history = history.slice(-100);
   
-              //   // broadcast message to all connected clients
-              //   var json = JSON.stringify({ type:'message', data: obj });
-              //  ws.send(json);
+                // broadcast message to all connected clients
+                var json = JSON.stringify({ type:'message', data: obj });
+               ws.send(json);
               runSample(message);
             }
       //log the received message and send it back to the client
