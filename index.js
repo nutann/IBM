@@ -130,7 +130,7 @@ const request = {
   queryInput: {
     text: {
          // The query to send to the dialogflow agent
-      text: 'hi',
+      text: message,
       // The language used by the client (en-US)
       languageCode: 'en-US',
     },
