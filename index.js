@@ -2,13 +2,18 @@ var express = require('express');
 var request = require('request');
 const dialogflow = require('dialogflow');
 const uuid = require('uuid');
-
+// websocket and http servers
+var webSocketServer = require('websocket').server;
+var http = require('http'); 
+var WebSocket = require('ws');
 
 var app = express();
 //var bodyparser = require('body-parser');
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+//initialize a simple http server
+const server = http.createServer(app);
 
 //app.use(bodyparser.urlencoded({ extended: false }));
 
@@ -33,54 +38,37 @@ app.use(express.urlencoded({ extended: true }))
 
 
 /**
- * Send a query to the dialogflow agent, and return the query result.
- * @param {string} projectId The project to be used
+ * Global variables
  */
-async function runSample(projectId = 'texecom-dxllts') {
-    // A unique identifier for the given session
-    const sessionId = uuid.v4();
-   
-    // Create a new session
-    const sessionClient = new dialogflow.SessionsClient( {keyFilename: "./googlekey.json"});
-    const sessionPath = sessionClient.sessionPath(projectId, sessionId);
-  
- 
-  // The text query request.
-  const request = {
-    session: sessionPath,
-    queryInput: {
-      text: {
-           // The query to send to the dialogflow agent
-        text: 'Hi',
-        // The language used by the client (en-US)
-        languageCode: 'en-US',
-      },
-    },
-  };
- 
-  // Send request and log result
-  const responses = await sessionClient.detectIntent(request).catch((err) => console.log(err));
-  console.log('Detected intent');
-  const result = responses[0].queryResult;
-  console.log(`  Query: ${result.queryText}`);
-  console.log(`  Response: ${result.fulfillmentText}`);
-  if (result.intent) {
-    console.log(`  Intent: ${result.intent.displayName}`);
-  } else {
-    console.log(`  No intent matched.`);
-}
+// latest 100 messages
+var history = [ ];
+// list of currently connected clients (users)
+var clients = [ ];
+
+/**
+ * Helper function for escaping input strings
+ */
+function htmlEntities(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-var port = process.env.PORT || 8080;
-app.listen(port,function (err) {
+// Array with some colors
+var colors = [ 'red', 'green', 'blue', 'magenta', 'purple', 'plum', 'orange' ];
+// ... in random order
+colors.sort(function(a,b) { return Math.random() > 0.5; } );
+
+
+var port = process.env.PORT || 8090;
+server.listen(port,function (err) {
     console.log("Listening to port "+port);
     //runSample();
 });
 
-app.get('/',function(req,res){
-    console.log("******************");
-    res.send('We are happy to see you using Chat Bot Webhook');
-  });
+// app.get('/',function(req,res){
+//     console.log("******************");
+//     res.send('We are happy to see you using Chat Bot Webhook');
+//   });
 app.post('/',function (req,res) {
 
     console.log("****************** POST request ***********");
@@ -111,3 +99,181 @@ function processAction(action){
 }
 
 
+
+
+
+
+
+
+
+//initialize the WebSocket server instance
+const wsServer = new WebSocket.Server({ server });
+
+wsServer.on('connection', (ws) => {
+/**
+ * Send a query to the dialogflow agent, and return the query result.
+ * @param {string} projectId The project to be used
+ */
+async function runSample(projectId = 'texecom-dxllts',message) {
+  // A unique identifier for the given session
+  const sessionId = uuid.v4();
+ 
+  // Create a new session
+  const sessionClient = new dialogflow.SessionsClient( {keyFilename: "./googlekey.json"});
+  const sessionPath = sessionClient.sessionPath(projectId, sessionId);
+
+
+// The text query request.
+const request = {
+  session: sessionPath,
+  queryInput: {
+    text: {
+         // The query to send to the dialogflow agent
+      text: message,
+      // The language used by the client (en-US)
+      languageCode: 'en-US',
+    },
+  },
+};
+
+// Send request and log result
+const responses = await sessionClient.detectIntent(request).catch((err) => console.log(err));
+console.log('Detected intent');
+const result = responses[0].queryResult;
+console.log(`  Query: ${result.queryText}`);
+console.log(`  Response: ${result.fulfillmentText}`);
+sendMessage(result.fulfillmentText);
+if (result.intent) {
+  console.log(`  Intent: ${result.intent.displayName}`);
+} else {
+  console.log(`  No intent matched.`);
+}
+}
+
+  clients = webSocketServer.clients
+  var userName = false;
+  var userColor = false;
+  console.log((new Date()) + ' Connection accepted.');
+  // send back chat history
+  if (history.length > 0) {
+    ws.send(JSON.stringify( { type: 'history', data: history} ));
+}
+  function sendMessage(message) {
+    var obj = {
+      time: (new Date()).getTime(),
+      text: htmlEntities(message),
+      author: userName,
+      color: userColor
+    };
+    history.push(obj);
+    history = history.slice(-100);
+    var json = JSON.stringify({ type: 'message', data: obj });
+    ws.send(json);
+  }
+  //connection is up, let's add a simple simple event
+  ws.on('message', (message) => {
+    if (userName === false) { // first message sent by user is their name
+      // remember user name
+      userName = htmlEntities(message);
+      // get random color and send it back to the user
+      userColor = colors.shift();
+      ws.send(JSON.stringify({ type:'color', data: userColor }));
+      console.log((new Date()) + ' User is known as: ' + userName
+                  + ' with ' + userColor + ' color.');
+
+  }else { // log and broadcast the message
+                console.log((new Date()) + ' Received Message from '
+                            + userName + ': ' + message);
+                
+                // we want to keep history of all sent messages
+              //   var obj = {
+              //       time: (new Date()).getTime(),
+              //       text: htmlEntities(message),
+              //       author: userName,
+              //       color: userColor
+              //   };
+              //   history.push(obj);
+              //   history = history.slice(-100);
+  
+              //   // broadcast message to all connected clients
+              //   var json = JSON.stringify({ type:'message', data: obj });
+              //  ws.send(json);
+              runSample(message);
+            }
+      //log the received message and send it back to the client
+      console.log('received: %s', message);
+    //  ws.send(`Hello, you sent -> ${message}`);
+  });
+
+  //send immediatly a feedback to the incoming connection    
+  ws.send('Hi there, I am a WebSocket server');
+});
+// This callback function is called every time someone
+// tries to connect to the WebSocket server
+// wsServer.on('request', function(request) {
+//   console.log((new Date()) + ' Connection from origin ' + request.origin + '.');
+
+//   // accept connection - you should check 'request.origin' to make sure that
+//   // client is connecting from your website
+//   // (http://en.wikipedia.org/wiki/Same_origin_policy)
+//   var connection = request.accept(null, request.origin); 
+//   // we need to know client index to remove them on 'close' event
+//   var index = clients.push(connection) - 1;
+//   var userName = false;
+//   var userColor = false;
+
+//   console.log((new Date()) + ' Connection accepted.');
+
+//   // send back chat history
+//   if (history.length > 0) {
+//       connection.sendUTF(JSON.stringify( { type: 'history', data: history} ));
+//   }
+
+  // user sent some message
+  // connection.on('message', function(message) {
+  //     if (message.type === 'utf8') { // accept only text
+  //         if (userName === false) { // first message sent by user is their name
+  //             // remember user name
+  //             userName = htmlEntities(message.utf8Data);
+  //             // get random color and send it back to the user
+  //             userColor = colors.shift();
+  //             connection.sendUTF(JSON.stringify({ type:'color', data: userColor }));
+  //             console.log((new Date()) + ' User is known as: ' + userName
+  //                         + ' with ' + userColor + ' color.');
+
+  //         } else { // log and broadcast the message
+  //             console.log((new Date()) + ' Received Message from '
+  //                         + userName + ': ' + message.utf8Data);
+              
+  //             // we want to keep history of all sent messages
+  //             var obj = {
+  //                 time: (new Date()).getTime(),
+  //                 text: htmlEntities(message.utf8Data),
+  //                 author: userName,
+  //                 color: userColor
+  //             };
+  //             history.push(obj);
+  //             history = history.slice(-100);
+
+  //             // broadcast message to all connected clients
+  //             var json = JSON.stringify({ type:'message', data: obj });
+  //             for (var i=0; i < clients.length; i++) {
+  //                 clients[i].sendUTF(json);
+  //             }
+  //         }
+  //     }
+  // });
+
+  // user disconnected
+//   ws.on('close', function(connection) {
+//       if (userName !== false && userColor !== false) {
+//           console.log((new Date()) + " Peer "
+//               + connection.remoteAddress + " disconnected.");
+//           // remove user from the list of connected clients
+//           clients.splice(index, 1);
+//           // push back user's color to be reused by another user
+//           colors.push(userColor);
+//       }
+//   });
+
+// });
