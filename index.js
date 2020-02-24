@@ -137,7 +137,7 @@ var context_name = "projects/" + projectId + "/agent/sessions/" + sessionId + "/
 console.log("context_name = "+context_name);
 var botcontext = {
   "name": context_name,
-  "lifespanCount": 1,
+  "lifespanCount": 5,
   "parameters": {
     "name": "Nutan"
   }
