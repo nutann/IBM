@@ -133,7 +133,8 @@ const request = {
 };
 var context_short_name = "bot"
 var context_name = "projects/" + projectId + "/agent/sessions/" + sessionId + "/contexts/" + 
-context_short_name.lower()
+"bot";
+console.log("context_name = "+context_name);
 var botcontext = {
   "name": context_name,
   "lifespanCount": 1,
