@@ -6,6 +6,7 @@ const uuid = require('uuid');
 //var webSocketServer = require('websocket').server;
 var http = require('http'); 
 var WebSocket = require('ws');
+const { struct } = require('pb-util'); 
 
 var app = express();
 //var bodyparser = require('body-parser');
@@ -114,8 +115,34 @@ async function runSample(message) {
   // Create a new session
   const sessionClient = new dialogflow.SessionsClient( {keyFilename: "./googlekey.json"});
   const sessionPath = sessionClient.sessionPath(projectId, sessionId);
+  const contextsClient = new dialogflow.ContextsClient();
+  async function createContext(sessionId, contextId, parameters, lifespanCount = 5) {
 
+    const sessionPath = contextsClient.sessionPath(projectId, sessionId);
+    const contextPath = contextsClient.contextPath(
+        projectId,
+        sessionId,
+        contextId
+    );
 
+    const request = {
+        parent: sessionPath,
+        context: {
+            name: contextPath,
+            parameters: struct.encode(parameters),
+            lifespanCount : 5
+        }
+    };
+
+    const [context] = await contextsClient.createContext(request);
+
+    return context;
+}
+
+const parameters = { // Custom parameters to pass with context
+  welcome: true
+};
+const context = await createContext(sessionId, 'welcome-context', parameters);
 // The text query request.
 const request = {
   session: sessionPath,
@@ -127,9 +154,9 @@ const request = {
       languageCode: 'en-US',
     },
   },
-  queryParameters: {
-    contexts: [botcontext]
-  },
+  queryParams: {
+    contexts: [context] // You can pass multiple contexts if you wish
+}
 };
 var context_short_name = "bot"
 var context_name = "projects/" + projectId + "/agent/sessions/" + sessionId + "/contexts/" + 
