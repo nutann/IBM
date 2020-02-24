@@ -137,7 +137,9 @@ context_name = "projects/" + projectId + "/agent/sessions/" + sessionId + "/cont
 var botcontext = {
   "name": context_name,
   "lifespanCount": 1,
-  
+  "parameters": {
+    "name": "Nutan"
+  }
 }
 
 // Send request and log result
