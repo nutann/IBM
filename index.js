@@ -131,13 +131,13 @@ const request = {
     contexts: [botcontext]
   },
 };
-
+context_short_name = "bot"
+context_name = "projects/" + projectId + "/agent/sessions/" + sessionId + "/contexts/" + 
+              bot.lower()
 var botcontext = {
-  "name": "projects/"+projectId +"/agent/sessions/"+sessionId+"/contexts/bot",
+  "name": context_name,
   "lifespanCount": 1,
-  "parameters": {
-    "name": "Nutan"
-  }
+  
 }
 
 // Send request and log result
