@@ -133,7 +133,7 @@ const request = {
 };
 
 var botcontext = {
-  "name": "projects/"+projectId +"/agent/sessions/sessionId/contexts/bot",
+  "name": "projects/"+projectId +"/agent/sessions/"+sessionId+"/contexts/bot",
   "lifespanCount": 1,
   "parameters": {
     "name": "Nutan"
