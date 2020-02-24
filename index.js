@@ -131,9 +131,9 @@ const request = {
     contexts: [botcontext]
   },
 };
-context_short_name = "bot"
-context_name = "projects/" + projectId + "/agent/sessions/" + sessionId + "/contexts/" + 
-              bot.lower()
+var context_short_name = "bot"
+var context_name = "projects/" + projectId + "/agent/sessions/" + sessionId + "/contexts/" + 
+context_short_name.lower()
 var botcontext = {
   "name": context_name,
   "lifespanCount": 1,
