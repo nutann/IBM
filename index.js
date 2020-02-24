@@ -115,7 +115,7 @@ async function runSample(message) {
   // Create a new session
   const sessionClient = new dialogflow.SessionsClient( {keyFilename: "./googlekey.json"});
   const sessionPath = sessionClient.sessionPath(projectId, sessionId);
-  const contextsClient = new dialogflow.ContextsClient();
+  const contextsClient = new dialogflow.ContextsClient( {keyFilename: "./googlekey.json"});
   async function createContext(sessionId, contextId, parameters, lifespanCount = 5) {
 
     const sessionPath = contextsClient.sessionPath(projectId, sessionId);
