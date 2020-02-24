@@ -127,7 +127,18 @@ const request = {
       languageCode: 'en-US',
     },
   },
+  queryParameters: {
+    contexts: [botcontext]
+  },
 };
+
+var botcontext = {
+  "name": "projects/"+projectId +"/agent/sessions/sessionId/contexts/bot",
+  "lifespanCount": 1,
+  "parameters": {
+    "name": "Nutan"
+  }
+}
 
 // Send request and log result
 const responses = await sessionClient.detectIntent(request).catch((err) => console.log(err));
